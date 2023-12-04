@@ -1,0 +1,36 @@
+[package]
+name = "paster"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
+
+[dependencies]
+rand = "0.8.5"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.5", features = ["shell-open"] }
+tokio = { version = "1", features = ["full"] }
+windows = { version = "0.52.0", features = [
+    "Win32_Foundation",
+    "Win32_System_Memory",
+    "Win32_System_DataExchange",
+    "Win32_UI_Input_KeyboardAndMouse",
+] }
+
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = ["custom-protocol"]
+# this feature is used used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+custom-protocol = ["tauri/custom-protocol"]
