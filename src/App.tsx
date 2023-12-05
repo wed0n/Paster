@@ -8,12 +8,14 @@ import {
   Spinner,
   webLightTheme,
 } from '@fluentui/react-components'
+import { invoke } from '@tauri-apps/api'
 import { useRef, useState } from 'react'
 export default function App() {
-  const [stand, setStand] = useState('50')
-  const lastStand = useRef('50')
-  const [float, setFloat] = useState('20')
-  const lastFloat = useRef('20')
+  const [errMsg, setErrMsg] = useState('')
+  const [stand, setStand] = useState('10')
+  const lastStand = useRef('10')
+  const [float, setFloat] = useState('5')
+  const lastFloat = useRef('5')
   const [counter, setCounter] = useState(-1)
   const [buttonDisabled, setButtonDisabled] = useState(false)
 
@@ -43,12 +45,25 @@ export default function App() {
       setCounter((counter) => {
         if (counter == 0) {
           clearInterval(interval)
-          setButtonDisabled(false)
+          ;(async () => {
+            try {
+              await invoke('paste', {
+                stand: parseInt(lastStand.current),
+                float: parseInt(lastFloat.current),
+              })
+            } catch (e: any) {
+              setErrMsg(e)
+            }
+            setButtonDisabled(false)
+            setCounter(-1)
+          })()
+          return 0
         }
         return counter - 1
       })
     }, 1000)
   }
+
   return (
     <FluentProvider
       style={{
@@ -66,9 +81,14 @@ export default function App() {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <Body1Stronger>
-          单击按钮后, 将在3S后开始, 延迟范围为[基本延迟, 基本延迟+浮动值]
-        </Body1Stronger>
+        {errMsg == '' ? (
+          <Body1Stronger>
+            单击按钮后, 将在3S后开始, 延迟(ms)范围为[基本延迟, 基本延迟+浮动值]
+          </Body1Stronger>
+        ) : (
+          <Body1Stronger style={{ color: '#d13438' }}>{errMsg}</Body1Stronger>
+        )}
+
         <div
           style={{
             height: '36%',

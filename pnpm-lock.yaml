@@ -8,6 +8,9 @@ dependencies:
   '@fluentui/react-components':
     specifier: ^9.42.0
     version: 9.42.0(@types/react-dom@18.2.17)(@types/react@18.2.41)(react-dom@18.2.0)(react@18.2.0)(scheduler@0.20.2)
+  '@tauri-apps/api':
+    specifier: ^1.5.0
+    version: 1.5.0
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2045,6 +2048,11 @@ packages:
     resolution: {integrity: sha512-FaruWX6KdudYloq1AHD/4nU+UsMTdNE8CKyrseXWEcgjDAbvkwJg2QGPAnfIJLIWsjZOSPLOAykK6fuYp4vp4A==}
     dependencies:
       tslib: 2.6.2
+    dev: false
+
+  /@tauri-apps/api@1.5.0:
+    resolution: {integrity: sha512-yQY9wpVNuiYhLLuyDlu1nBpqJELT1fGp7OctN4rW9I2W1T2p7A3tqPxsEzQprEwneQRBAlPM9vC8NsnMbct+pg==}
+    engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
   /@types/babel__core@7.20.5:

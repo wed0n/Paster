@@ -1,4 +1,5 @@
-use std::{ffi::c_void, thread, time};
+use std::ffi::c_void;
+use tokio::time::{sleep, Duration};
 use windows::Win32::{
     Foundation::HGLOBAL,
     System::{
@@ -59,7 +60,8 @@ fn get_clipboard() -> Result<Vec<u16>, &'static str> {
     return Ok(result);
 }
 
-fn paste() -> Result<(), &'static str> {
+#[tauri::command]
+pub async fn paste(stand: u32, float: u32) -> Result<(), &'static str> {
     let utf16_units: Vec<u16> = get_clipboard()?;
     for item in utf16_units {
         if item == 10 {
@@ -112,7 +114,8 @@ fn paste() -> Result<(), &'static str> {
             }
         };
 
-        thread::sleep(time::Duration::from_millis(10));
+        let random = rand::random::<u32>();
+        sleep(Duration::from_millis((stand + random % float) as u64)).await;
     }
 
     return Ok(());
