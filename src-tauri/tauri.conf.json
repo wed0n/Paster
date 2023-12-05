@@ -60,13 +60,15 @@
     "windows": [
       {
         "fullscreen": false,
-        "width": 400,
-        "height": 300,
+        "width": 300,
+        "height": 200,
+        "minWidth": 300,
+        "minHeight": 200,
         "center": true,
-        "resizable": false,
+        "resizable": true,
         "maximizable": false,
         "minimizable": false,
-        "alwaysOnTop": true,
+        "alwaysOnTop": false,
         "title": "Paster By: Wed0n"
       }
     ]
