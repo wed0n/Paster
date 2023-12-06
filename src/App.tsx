@@ -38,7 +38,6 @@ export default function App() {
     }
   }
   const onClick = () => {
-    console.log(lastStand.current, lastFloat.current)
     setButtonDisabled(true)
     setCounter(3)
     const interval = setInterval(() => {
@@ -51,6 +50,7 @@ export default function App() {
                 stand: parseInt(lastStand.current),
                 float: parseInt(lastFloat.current),
               })
+              setErrMsg('')
             } catch (e: any) {
               setErrMsg(e)
             }
@@ -76,60 +76,68 @@ export default function App() {
           width: '100%',
           height: '100%',
           display: 'flex',
-          padding: 15,
-          flexDirection: 'column',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {errMsg == '' ? (
-          <Body1Stronger>
-            单击按钮后, 将在3S后开始, 延迟(ms)范围为[基本延迟, 基本延迟+浮动值]
-          </Body1Stronger>
-        ) : (
-          <Body1Stronger style={{ color: '#d13438' }}>{errMsg}</Body1Stronger>
-        )}
-
         <div
           style={{
-            height: '36%',
             display: 'flex',
+            padding: 15,
             flexDirection: 'column',
-            justifyContent: 'space-around',
-            alignItems: 'flex-end',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
-          <div>
-            <Label weight="semibold">基本延迟:</Label>
-            <Input
-              value={stand}
-              size="small"
-              style={{ marginLeft: 8, width: 60 }}
-              onChange={onChange.bind(null, setStand)}
-              onBlur={onBlur.bind(null, stand, setStand, lastStand)}
-            />
-          </div>
-          <div>
-            <Label weight="semibold">浮动值:</Label>
-            <Input
-              value={float}
-              size="small"
-              style={{ marginLeft: 8, width: 60 }}
-              onChange={onChange.bind(null, setFloat)}
-              onBlur={onBlur.bind(null, float, setFloat, lastFloat)}
-            />
-          </div>
-        </div>
-        <Button
-          appearance="primary"
-          disabled={buttonDisabled}
-          onClick={onClick}>
-          {counter == -1 ? (
-            '粘贴'
-          ) : counter == 0 ? (
-            <Spinner size="tiny" />
+          {errMsg == '' ? (
+            <Body1Stronger>
+              单击按钮后, 将在3S后开始, 延迟(ms)范围为[基本延迟,
+              基本延迟+浮动值]
+            </Body1Stronger>
           ) : (
-            counter
+            <Body1Stronger style={{ color: '#d13438' }}>{errMsg}</Body1Stronger>
           )}
-        </Button>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-around',
+              alignItems: 'flex-end',
+              marginBlock: 20,
+            }}>
+            <div style={{ marginBottom: 10 }}>
+              <Label weight="semibold">基本延迟:</Label>
+              <Input
+                value={stand}
+                size="small"
+                style={{ marginLeft: 8, width: 60 }}
+                onChange={onChange.bind(null, setStand)}
+                onBlur={onBlur.bind(null, stand, setStand, lastStand)}
+              />
+            </div>
+            <div>
+              <Label weight="semibold">浮动值:</Label>
+              <Input
+                value={float}
+                size="small"
+                style={{ marginLeft: 8, width: 60 }}
+                onChange={onChange.bind(null, setFloat)}
+                onBlur={onBlur.bind(null, float, setFloat, lastFloat)}
+              />
+            </div>
+          </div>
+          <Button
+            appearance="primary"
+            disabled={buttonDisabled}
+            onClick={onClick}>
+            {counter == -1 ? (
+              '粘贴'
+            ) : counter == 0 ? (
+              <Spinner size="tiny" />
+            ) : (
+              counter
+            )}
+          </Button>
+        </div>
       </div>
     </FluentProvider>
   )

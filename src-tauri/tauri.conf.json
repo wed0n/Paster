@@ -66,8 +66,8 @@
         "minHeight": 200,
         "center": true,
         "resizable": true,
-        "maximizable": false,
-        "minimizable": false,
+        "maximizable": true,
+        "minimizable": true,
         "alwaysOnTop": true,
         "title": "Paster By: Wed0n"
       }
