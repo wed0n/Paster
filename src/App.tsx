@@ -42,7 +42,7 @@ export default function App() {
     setCounter(3)
     const interval = setInterval(() => {
       setCounter((counter) => {
-        if (counter == 0) {
+        if (counter == 1) {
           clearInterval(interval)
           ;(async () => {
             try {
