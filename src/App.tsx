@@ -6,11 +6,13 @@ import {
   InputOnChangeData,
   Label,
   Spinner,
+  webDarkTheme,
   webLightTheme,
 } from '@fluentui/react-components'
 import { invoke } from '@tauri-apps/api'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 export default function App() {
+  const [theme, setTheme] = useState(webLightTheme)
   const [errMsg, setErrMsg] = useState('')
   const [stand, setStand] = useState('10')
   const lastStand = useRef('10')
@@ -64,13 +66,25 @@ export default function App() {
     }, 1000)
   }
 
+  useEffect(() => {
+    const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)')
+    setTheme(mediaQueryList.matches ? webDarkTheme : webLightTheme)
+    const listener = (event: MediaQueryListEvent) => {
+      setTheme(event.matches ? webDarkTheme : webLightTheme)
+    }
+    mediaQueryList.addEventListener('change', listener)
+    return () => {
+      mediaQueryList.removeEventListener('change', listener)
+    }
+  }, [])
+
   return (
     <FluentProvider
       style={{
         width: '100%',
         height: '100%',
       }}
-      theme={webLightTheme}>
+      theme={theme}>
       <div
         style={{
           width: '100%',
