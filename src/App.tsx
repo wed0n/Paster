@@ -53,8 +53,8 @@ export default function App() {
                 float: parseInt(lastFloat.current),
               })
               setErrMsg('')
-            } catch (e: any) {
-              setErrMsg(e)
+            } catch (e) {
+              setErrMsg(e as string)
             }
             setButtonDisabled(false)
             setCounter(-1)

@@ -22,40 +22,38 @@ fn get_clipboard() -> Result<Vec<u16>, &'static str> {
 
     //参考 https://learn.microsoft.com/zh-cn/windows/win32/dataxchg/using-the-clipboard#pasting-information-from-the-clipboard
     unsafe {
-        if let Err(_) = OpenClipboard(HWND(0)) {
-            return Err("打开剪切板错误");
-        }
-        match GetClipboardData(CF_UNICODETEXT) {
-            Ok(hglb) => {
-                let locker = HGLOBAL(hglb.0 as *mut c_void);
-                let raw_data = GlobalLock(locker);
-                let data = raw_data as *const u16;
-                let mut i = 0usize;
-
-                loop {
-                    let item = *data.add(i);
-                    i += 1;
-                    if item == 0 {
-                        break;
-                    }
-                    if item == 13 {
-                        //舍弃'\r'
-                        continue;
-                    }
-                    result.push(item);
-                }
-
-                if let Err(_) = GlobalUnlock(locker) {
-                    return Err("解除剪切板锁定失败");
-                }
+        OpenClipboard(HWND(0)).or(Err("打开剪切板错误"))?;
+        let hglb = GetClipboardData(CF_UNICODETEXT).map_err(|_| {
+            if let Err(_) = CloseClipboard() {
+                return "关闭剪切板失败";
             }
+            "获取剪切板数据错误"
+        })?;
+        let locker = HGLOBAL(hglb.0 as *mut c_void);
+        let raw_data = GlobalLock(locker);
+        let data = raw_data as *const u16;
+        let mut i = 0usize;
 
-            Err(_) => return Err("获取剪切板数据错误"),
+        loop {
+            let item = *data.add(i);
+            i += 1;
+            if item == 0 {
+                break;
+            }
+            if item == 13 {
+                //舍弃'\r'
+                continue;
+            }
+            result.push(item);
         }
 
-        if let Err(_) = CloseClipboard() {
-            return Err("关闭剪切板失败");
-        }
+        GlobalUnlock(locker).map_err(|_| {
+            if let Err(_) = CloseClipboard() {
+                return "关闭剪切板失败";
+            }
+            "解除剪切板锁定失败"
+        })?;
+        CloseClipboard().or(Err("关闭剪切板失败"))?;
     }
     return Ok(result);
 }
